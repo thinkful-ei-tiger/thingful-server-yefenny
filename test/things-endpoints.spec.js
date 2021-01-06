@@ -71,7 +71,7 @@ describe('Things Endpoints', function () {
         const thingId = 123456;
         return supertest(app)
           .get(`/api/things/${thingId}`)
-          .set('Authorization', helpers.makeAuthToken(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(404, { error: `Thing doesn't exist` });
       });
     });
@@ -91,7 +91,7 @@ describe('Things Endpoints', function () {
 
         return supertest(app)
           .get(`/api/things/${thingId}`)
-          .set('Authorization', helpers.makeAuthToken(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedThing);
       });
     });
@@ -109,7 +109,7 @@ describe('Things Endpoints', function () {
       it('removes XSS attack content', () => {
         return supertest(app)
           .get(`/api/things/${maliciousThing.id}`)
-          .set('Authorization', helpers.makeAuthToken(testUser))
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(200)
           .expect((res) => {
             expect(res.body.title).to.eql(expectedThing.title);
@@ -126,7 +126,7 @@ describe('Things Endpoints', function () {
         const thingId = 123456;
         return supertest(app)
           .get(`/api/things/${thingId}/reviews`)
-          .set('Authorization', helpers.makeAuthToken(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(404, { error: `Thing doesn't exist` });
       });
     });
@@ -146,7 +146,7 @@ describe('Things Endpoints', function () {
 
         return supertest(app)
           .get(`/api/things/${thingId}/reviews`)
-          .set('Authorization', helpers.makeAuthToken(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedReviews);
       });
     });

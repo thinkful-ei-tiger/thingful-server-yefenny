@@ -42,29 +42,23 @@ describe('Protected endpoints', () => {
   ];
   protectedCheckpoints.forEach((ck) => {
     describe(ck.name, () => {
-      it(`returns 401 'missing basic token' if there is not basic token`, () => {
-        return ck.method(ck.path).expect(401, { error: 'missing basic token' });
+      it(`returns 401 'missing bearer token' if there is not bearer token`, () => {
+        return ck
+          .method(ck.path)
+          .expect(401, { error: 'missing bearer token' });
       });
 
-      it(` returns 401 'unauthorized request' if missing credentials`, () => {
-        const user = { user_name: '', password: '' };
-        const token = helpers.makeAuthToken(user);
+      it(` returns 401 'unauthorized request' if invalid JWT secret`, () => {
+        const user = helpers.makeUsersArray()[0];
+        const token = helpers.makeAuthHeader(user, 'bad secret');
         return ck
           .method(ck.path)
           .set('Authorization', token)
           .expect(401, { error: 'unauthorized request' });
       });
       it(` return 401 'unauthorized request' if invalid user`, () => {
-        const user = { user_name: 'yefenny', password: '1235' };
-        const token = helpers.makeAuthToken(user);
-        return ck
-          .method(ck.path)
-          .set('Authorization', token)
-          .expect(401, { error: 'unauthorized request' });
-      });
-      it(` returns 401 'unauthorized request' if invalid password`, () => {
-        const user = { user_name: 'test-user-1', password: 'asss' };
-        const token = helpers.makeAuthToken(user);
+        const user = { user_name: 'jjjj', id: 1 };
+        const token = helpers.makeAuthHeader(user);
         return ck
           .method(ck.path)
           .set('Authorization', token)
